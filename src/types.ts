@@ -1,6 +1,6 @@
-import type * as express from "express";
 import * as passport from "passport";
 import { Profile, SamlConfig } from ".";
+import type { NextRequest } from "next/server";
 
 export interface AuthenticateOptions extends passport.AuthenticateOptions {
   samlFallback?: "login-request" | "logout-request";
@@ -18,7 +18,7 @@ export interface StrategyOptions {
 
 export type User = Record<string, unknown>;
 
-export interface RequestWithUser extends express.Request {
+export interface RequestWithUser extends NextRequest {
   samlLogoutRequest: Profile;
   user: User;
 }
@@ -30,7 +30,7 @@ export type VerifiedCallback = (
 ) => void;
 
 export type VerifyWithRequest = (
-  req: express.Request,
+  req: NextRequest,
   profile: Profile | null,
   done: VerifiedCallback
 ) => void;
@@ -42,7 +42,7 @@ export type PassportSamlConfig = SamlConfig & StrategyOptions;
 export type StrategyOptionsCallback = (err: Error | null, samlOptions?: PassportSamlConfig) => void;
 
 interface BaseMultiStrategyConfig {
-  getSamlOptions(req: express.Request, callback: StrategyOptionsCallback): void;
+  getSamlOptions(req: NextRequest, callback: StrategyOptionsCallback): void;
 }
 
 export type MultiStrategyConfig = Partial<PassportSamlConfig> &
